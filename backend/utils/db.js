@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+
+//" connection the mongodb with the server for the data saving "
+
 const connectDB=async () => {
     try {
        await mongoose.connect(process.env.mongoURL);
