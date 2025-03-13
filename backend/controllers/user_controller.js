@@ -92,3 +92,12 @@ export const logout = async (req, res) => {
         console.log(error);
     }
 } 
+
+export const getProfile=async (req,res) => {
+    try {
+        const userId=req.pasams.id;
+        
+    } catch (error) {
+        
+    }
+}
