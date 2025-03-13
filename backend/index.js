@@ -2,27 +2,13 @@
 import express, { urlencoded } from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import dotenv from "dotenv";
+import connectDB from "./utils/db.js"
 
+dotenv.config();
 
 const app=express();
-const PORT=8000;
-
-// testing the index page or server is correct working or not to setup
-
-
-app.get("/",(_,res)=>{
-    return res.status(200).json({
-        message:"the testing backend setup to start project ",
-        success:true
-    })
-})
-
-
-
-
-
-
-
+const PORT=process.env.PORT || 8000;
 
 
 //middleware
@@ -38,4 +24,7 @@ app.use(cors(corsOptions))
 
 
 
-app.listen(PORT,()=>{console.log(`server is sunning on port ${PORT}`)})
+app.listen(PORT,()=>{
+    connectDB();
+    console.log(`server is sunning on port ${PORT}`)
+})
