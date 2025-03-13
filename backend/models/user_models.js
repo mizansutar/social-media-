@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+
+// the user model is created in models / user_models file and there are 
 userSchema=new mongoose.Schema({
     username:{
         type:String,
