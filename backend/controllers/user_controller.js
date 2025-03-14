@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs"
 import { User } from "../models/user_models.js"
 import jwt from "jsonwebtoken"
 import getDatauli from "../utils/dataurl.js";
+import { Promise } from "mongoose";
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -137,7 +138,7 @@ export const editProfile = async (req, res) => {
         await user.save();
 
         return res.status(200).json({
-            message:"proffile updated",
+            message: "proffile updated",
             success: true,
             user
         })
@@ -145,3 +146,73 @@ export const editProfile = async (req, res) => {
         console.log(error);
     }
 }
+
+export const sugestedUsers = async (req, res) => {
+    const suggestusers = await User.find({ _id: { $ne: req.id } }).selected("-password");
+    if (suggestusers) {
+
+        return res.status(400).json({
+            message: "currently not user found"
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        users: suggestusers
+    });
+}
+
+
+export const followerorfollowing = async (req, res) => {
+    try {
+        const mainfollower = req.id;  // the main user wich is logged in the 
+        const folllowotheruser = req.pasams.id; // the user want to follow 
+
+        if (mainfollower === folllowotheruser) {
+
+            return res.status(400).json({
+                message: "use cant follow or unfollow ",
+                success: false
+            })
+        }
+
+
+        const user = await User.findById(mainfollower);
+        const targetUser = await User.findById(folllowotheruser);
+        if (!user || targetUser) {
+            return res.status(400).json({
+                message: "user not found  ",
+                success: false
+            })
+        }
+        // followe or unfollow to user 
+        const isFollowing = user.following.includes(folllowotheruser);
+        if (isFollowing) {
+            // unfolow logic 
+
+            await Promise.all([
+                User.updateOne({ _id: mainfollower }, { $pull: { following: folllowotheruser } }),
+                User.updateOne({ _id: folllowotheruser }, { $pull: { following: mainfollower } })
+            ])
+
+            return res.status(200).json({
+                message: "unfollow succesfuly",
+                success: true
+            })
+        }
+        else {
+            // follow logic 
+            await Promise.all([
+                User.updateOne({ _id: mainfollower }, { $push: { following: folllowotheruser } }),
+                User.updateOne({ _id: folllowotheruser }, { $push: { following: mainfollower } })
+            ])
+            return res.status(200).json({
+                message: "follow succesfuly",
+                success: true
+            })
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
