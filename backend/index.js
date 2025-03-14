@@ -7,7 +7,8 @@ import connectDB from "./utils/db.js"
 
 // routes 
 import userRoute  from "./routes/user_routes.js"
-
+import postRoute from "./routes/post_routes.js"
+import msgRoute from "./routes/message_routes.js"
 dotenv.config();
 
 const app=express();
@@ -26,6 +27,8 @@ const corsOptions={
 app.use(cors(corsOptions))
 // api 
 app.use("/api/v1/user",userRoute);
+app.use("api/v1/post",postRoute);
+app.use("api/v1/msg",msgRoute);
 
 app.listen(PORT,()=>{
     connectDB();
