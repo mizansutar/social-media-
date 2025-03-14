@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs"
 import  User  from "../models/user_models.js"
 import jwt from "jsonwebtoken"
-import getDatauli from "../utils/dataurl.js";
+import uploadImageDb from "../db_imageUpload/profileUpload.js"
+
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -19,7 +20,7 @@ export const register = async (req, res) => {
             });
         }
         const hashedpassword = await bcrypt.hash(password, 10)
-        await user.create({
+        await User.create({
             username,
             email,
             password: hashedpassword,
@@ -71,7 +72,7 @@ export const login = async (req, res) => {
 
         const token = await jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1d' })
         return res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 1 * 24 * 60 * 1000 }).json({
-            message: `welcome back ${username}`,
+            message: `welcome back ${user.username}`,
             success: true,
             user
         })
@@ -84,7 +85,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        return res.cookie("token" | "", { maxAge: 0 }).json({
+        return res.cookie("token", "", { maxAge: 0 }).json({
             message: " logout succesfully",
             success: true,
 
@@ -96,8 +97,8 @@ export const logout = async (req, res) => {
 
 export const getProfile = async (req, res) => {
     try {
-        const userId = req.pasams.id;
-        let user = await User.findById(userId);
+        const userId = req.params.id;
+        let user = await User.findById(userId).select("-password");
         return res.status(200).json({
             user,
             success: true
@@ -110,44 +111,47 @@ export const getProfile = async (req, res) => {
 
 export const editProfile = async (req, res) => {
     try {
-        const userId = req.id;
-        const { bio } = req.body;
-        const profilePic = req.file;
-
-        if (profilePic) {
-            const fileuri = getDatauli(profilePic);
-
-        }
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({
-                message: "user not found",
-                success: false
-            })
-        }
-
-        if (bio) {
-            user.bio = bio
-        }
-
-        // need to work on image saving proccess to save in the db
-
-
-        await user.save();
-
-        return res.status(200).json({
-            message: "proffile updated",
-            success: true,
-            user
-        })
+      const userId = req.id;
+      const { bio } = req.body;
+      const profilePic = req.file;
+  
+      console.log("Received:", { userId, bio, profilePic });
+  
+      let imageUrl = null;
+      if (profilePic) {
+        imageUrl = await uploadImageDb(profilePic);
+      }
+  
+      const user = await User.findById(userId).select("-password");
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+          success: false,
+        });
+      }
+  
+      if (bio) user.bio = bio;
+      if (imageUrl) user.profilePic = imageUrl; // Save image URL to user profile
+  
+      await user.save();
+  
+      return res.status(200).json({
+        message: "Profile updated",
+        success: true,
+        user,
+      });
     } catch (error) {
-        console.log(error);
+      console.error("Error updating profile:", error);
+      return res.status(500).json({
+        message: "Server error",
+        success: false,
+      });
     }
-}
+  };
+  
 
 export const sugestedUsers = async (req, res) => {
-    const suggestusers = await User.find({ _id: { $ne: req.id } }).selected("-password");
+    const suggestusers = await User.find({ _id: { $ne: req.id } }).select("-password");
     if (suggestusers) {
 
         return res.status(400).json({

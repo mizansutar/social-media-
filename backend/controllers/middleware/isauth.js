@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 //import message_model from "../../models/message_model";
 
-const isauth = async (req, res) => {
+const isauth = async (req, res,next) => {
     try {
         const token = req.cookies.token;
         if (!token) {
@@ -15,10 +15,10 @@ const isauth = async (req, res) => {
                 message: "the user not authenticated."
             });
         }
-        req.id=decode.userId;
+        req.id = decode.userId;
         next();
     } catch (error) {
-console.log(error)
+        console.log(error)
     }
 }
 export default isauth
