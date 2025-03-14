@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 // the user model is created in models / user_models file and there are 
-userSchema=new mongoose.Schema({
+
+const userSchema=new mongoose.Schema({
     username:{
         type:String,
         required:true,
@@ -37,4 +38,5 @@ userSchema=new mongoose.Schema({
 
 },{timestamps:true});
 
-export  default User=mongoose.model("User",userSchema);
+const User= mongoose.model("User",userSchema);
+export  default User

@@ -1,8 +1,7 @@
 import bcrypt from "bcryptjs"
-import { User } from "../models/user_models.js"
+import  User  from "../models/user_models.js"
 import jwt from "jsonwebtoken"
 import getDatauli from "../utils/dataurl.js";
-import { Promise } from "mongoose";
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
