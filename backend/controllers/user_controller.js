@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
 import { User } from "../models/user_models.js"
 import jwt from "jsonwebtoken"
+import getDatauli from "../utils/dataurl.js";
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -91,13 +92,56 @@ export const logout = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-} 
+}
 
-export const getProfile=async (req,res) => {
+export const getProfile = async (req, res) => {
     try {
-        const userId=req.pasams.id;
-        
+        const userId = req.pasams.id;
+        let user = await User.findById(userId);
+        return res.status(200).json({
+            user,
+            success: true
+        })
     } catch (error) {
-        
+        console.log(error);
+    }
+}
+
+
+export const editProfile = async (req, res) => {
+    try {
+        const userId = req.id;
+        const { bio } = req.body;
+        const profilePic = req.file;
+
+        if (profilePic) {
+            const fileuri = getDatauli(profilePic);
+
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "user not found",
+                success: false
+            })
+        }
+
+        if (bio) {
+            user.bio = bio
+        }
+
+        // need to work on image saving proccess to save in the db
+
+
+        await user.save();
+
+        return res.status(200).json({
+            message:"proffile updated",
+            success: true,
+            user
+        })
+    } catch (error) {
+        console.log(error);
     }
 }
