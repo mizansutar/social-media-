@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs"
 import  User  from "../models/user_models.js"
 import jwt from "jsonwebtoken"
 import uploadImageDb from "../db_imageUpload/profileUpload.js"
-
+import Post from "../models/Post_models.js"
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -58,7 +58,17 @@ export const login = async (req, res) => {
                 message: "incorrect email or password",
                 success: false,
             })
-        }// 
+        }
+        // popolet 
+        const populatePosts= await Promise.all(
+            user.posts.map(async(postId)=>{
+                const post =await  Post.findById(postId);
+                if(post.auther.equals(user._id)){
+                    return post;
+                }
+                return null;
+            })
+        )
         user = {
             _id: user._id,
             username: user.username,
@@ -67,7 +77,7 @@ export const login = async (req, res) => {
             bio: user.bio,
             follower: user.follower,
             following: user.following,
-            posts: user.posts
+            posts: populatePosts
         }
 
         const token = await jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1d' })
