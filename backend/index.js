@@ -27,8 +27,8 @@ const corsOptions={
 app.use(cors(corsOptions))
 // api 
 app.use("/api/v1/user",userRoute);
-app.use("api/v1/post",postRoute);
-app.use("api/v1/msg",msgRoute);
+app.use("/api/v1/post",postRoute);
+app.use("/api/v1/msg",msgRoute);
 
 app.listen(PORT,()=>{
     connectDB();

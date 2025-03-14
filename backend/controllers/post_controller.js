@@ -18,7 +18,7 @@ export const AddNewPost = async (req, res) => {
             })
         }
         // image upload 
-        const imageUrl = uploadImageDb(image)
+        const imageUrl =await uploadImageDb(image)
 
         const post = await Post.create({
             caption,

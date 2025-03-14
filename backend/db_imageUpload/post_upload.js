@@ -2,14 +2,14 @@ import postImageModel from "../models/postImage_model.js";
 
 const Url = "http://localhost:8000";
 
-const uploadImageDb = async (profilePic) => {
+const uploadImageDb = async (image) => {
   try {
-    if (!profilePic) return null;
+    if (!image) return null;
 
     const img = {
-      filename: profilePic.originalname,
-      contentType: profilePic.mimetype,
-      imageBase64: profilePic.buffer.toString("base64"),
+      filename: image.originalname,
+      contentType: image.mimetype,
+      imageBase64: image.buffer.toString("base64"),
     };
     
     const newImage = new postImageModel(img);
