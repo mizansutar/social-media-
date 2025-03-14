@@ -21,3 +21,4 @@ const isauth = async (req, res) => {
 console.log(error)
     }
 }
+export default isauth
