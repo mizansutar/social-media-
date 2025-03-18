@@ -2,8 +2,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./components/mainLayout";
 import Home from "./components/home";
 import Login from "./components/Login";
-import SignUp from "./components/SignUp";
+import SignUp from  "./components/signUp"
 import Profile from "./components/profile";
+import { ToastContainer } from "react-toastify";
 const browserRouter = createBrowserRouter([
   {
     path: "/",
@@ -14,7 +15,6 @@ const browserRouter = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-    
       {
         //index: true, // This makes Home the default child route
         path: "/profile",
@@ -28,14 +28,18 @@ const browserRouter = createBrowserRouter([
   },
   {
     path: "signup",
-    element: <SignUp />,
+    element: <SignUp/>,
   },
 
 
 ]);
 
 function App() {
-  return <RouterProvider router={browserRouter} />;
+  return (<>
+  
+  <ToastContainer position="top-right" autoClose={3000} />
+  <RouterProvider router={browserRouter} />
+  </>);
 }
 
 export default App;

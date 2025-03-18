@@ -4,8 +4,8 @@ const Profile=()=>{
     return(
         <>
 
-        <h1>main pro
-    
+        <h1>
+    profile
         </h1>
         </>
     )

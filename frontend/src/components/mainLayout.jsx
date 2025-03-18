@@ -1,13 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-
-const MainLayout=()=>{
-    return(
+import LeftSidebar from "./LeftSidebar";
+const MainLayout = () => {
+    return (
         <>
-
-       <div>
-        <Outlet></Outlet>
-       </div>
+            <LeftSidebar />
+            <div>
+                <Outlet />
+            </div>
         </>
     )
 }
