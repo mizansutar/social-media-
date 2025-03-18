@@ -3,26 +3,35 @@ import MainLayout from "./components/mainLayout";
 import Home from "./components/home";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-
+import Profile from "./components/profile";
 const browserRouter = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />, // Main layout should contain <Outlet />
     children: [
       {
-        index: true, // This makes Home the default child route
+        //index: true, // This makes Home the default child route
+        path: "/",
         element: <Home />,
-      }],},
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "signup",
-        element: <SignUp />,
       },
     
-  
+      {
+        //index: true, // This makes Home the default child route
+        path: "/profile",
+        element: <Profile/>,
+      }
+    ]
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "signup",
+    element: <SignUp />,
+  },
+
+
 ]);
 
 function App() {

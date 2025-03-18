@@ -15,10 +15,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/system';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const BackgroundContainer = styled(Box)({
   minHeight: '100vh',
-  backgroundImage: 'url(./public/signUpbackgroun.jpg)', // Ensure this path is correct
+  backgroundImage: 'url(./public/login.jpg)', // Ensure this path is correct
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   display: 'flex',
@@ -56,7 +60,7 @@ function Login() {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
-
+const navigate=useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -69,10 +73,27 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/v1/user/login', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        toast.success('Login successful! Redirecting...');
+        setTimeout(() => {
+           navigate('/');// (If using useNavigate)
+        }, 3000);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || 'Login failed');
+    }
   };
 
   return (
@@ -157,6 +178,7 @@ function Login() {
           </Box>
         </Box>
       </StyledPaper>
+      <ToastContainer />
     </BackgroundContainer>
   );
 }

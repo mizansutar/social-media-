@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Grid,
-  Link,
   Paper,
   InputAdornment,
   IconButton,
@@ -17,12 +16,12 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/system';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-//import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  // ✅ Correct import
 import axios from 'axios';
 
 const BackgroundContainer = styled(Box)({
   minHeight: '100vh',
-  backgroundImage: 'url(./public/signUpbackgroun.jpg)', // Ensure this path is correct
+  backgroundImage: 'url(./public/signUpbackgroun.jpg)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   display: 'flex',
@@ -34,7 +33,7 @@ const StyledPaper = styled(Paper)({
   padding: 20,
   maxWidth: 400,
   width: '100%',
-  backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent white
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
   borderRadius: 10,
   boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
   backdropFilter: 'blur(10px)',
@@ -61,8 +60,7 @@ function SignUp() {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
- // const navigate = useNavigate();
-
+  const navigate=useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -88,8 +86,8 @@ function SignUp() {
       if (response.data.success) {
         toast.success(response.data.message);
         setTimeout(() => {
-       //   navigate('/login');
-        }, 3000); // Redirect after 3 seconds
+          navigate('/login');// (If using useNavigate)
+        }, 3000);
       }
     } catch (error) {
       console.error(error);
@@ -183,7 +181,8 @@ function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                {/* ✅ Fixed: `Link` now works */}
+                <Link to="/login" style={{ textDecoration: 'underline', color: 'blue', fontWeight: 'bold' }}>
                   Already have an account? Sign in
                 </Link>
               </Grid>
