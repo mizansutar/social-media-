@@ -15,7 +15,7 @@ const uploadImageDb = async (profilePic) => {
     const newImage = new profileImage(img);
     await newImage.save();
 
-    const imageUrl = `${Url}/file/${newImage._id}`;
+    const imageUrl = `${Url}/api/v1/image/images/profile/${newImage._id}`;
     return imageUrl;
   } catch (error) {
     console.error("Error uploading image:", error);
@@ -25,16 +25,3 @@ const uploadImageDb = async (profilePic) => {
 
 export default uploadImageDb;
 
-
-const getImage = async (req, res) => {
-  try {
-    const image = await Image.findById(req.params.id);
-    if (!image) {
-      return res.status(404).json({ message: 'Image not found' });
-    }
-    res.set('Content-Type', image.contentType);
-    res.send(Buffer.from(image.imageBase64, 'base64'));
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};

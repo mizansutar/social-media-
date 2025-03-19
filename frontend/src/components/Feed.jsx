@@ -1,14 +1,13 @@
 import React from "react";
 import Posts from "./Posts";
+import { Box } from "@mui/material";
+
 const Feed = () => {
     return (
-        <>
-
-        <div className="flex-1 my-8 flex flex-col items-center pl-[20%]">
-            <Posts/>
-        </div>
-        </>
-    )
-}
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, width: "100%" }}>
+            <Posts />
+        </Box>
+    );
+};
 
 export default Feed;

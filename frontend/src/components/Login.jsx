@@ -19,6 +19,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setAuthUser } from '../redux/authslice';
 
 const BackgroundContainer = styled(Box)({
   minHeight: '100vh',
@@ -61,6 +63,7 @@ function Login() {
   });
   const [showPassword, setShowPassword] = useState(false);
 const navigate=useNavigate();
+const dispatch=useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -87,6 +90,7 @@ const navigate=useNavigate();
       if (response.data.success) {
         toast.success('Login successful! Redirecting...');
         setTimeout(() => {
+          dispatch(setAuthUser(response.data.user))
            navigate('/');// (If using useNavigate)
         }, 3000);
       }

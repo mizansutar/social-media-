@@ -6,8 +6,6 @@ import { addcommet, AddNewPost, bookmarkPost, deletePost, DislikePost, GetAllPos
 
 const router=express.Router();
 
-
-
 router.route("/addpost").post(isauth,upload.single("image"),AddNewPost);
 router.route("/all").get(isauth,GetAllPosts);
 router.route("/userpost").get(isauth,getUserPost);

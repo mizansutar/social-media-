@@ -133,6 +133,7 @@ export const editProfile = async (req, res) => {
       let imageUrl = null;
       if (profilePic) {
         imageUrl = await uploadImageDb(profilePic);
+        console.log(imageUrl)
       }
   
       const user = await User.findById(userId).select("-password");
